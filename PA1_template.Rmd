@@ -5,21 +5,185 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
 
+```{r}
+# Load all the libraries used in this assignment
+library(data.table)
+library(dplyr)
+library(lubridate)
+library(xtable)
+library(lattice)
 
+file <- "../data/repdata_data_activity/activity.csv"
+dt_total <- fread(file, header=TRUE, stringsAsFactors=FALSE, colClasses=c("integer","character","integer"))
+
+# Tidy the data into a format usable for the rest of this assigment
+dt_clean <- dt_total
+
+dt_clean$Interval <- fast_strptime(
+    sprintf("%d:%d", dt_total$interval %/% 100, dt_total$interval %% 100), 
+    "%H:%M", tz="UTC")        # Create a new field Interval as a Time Series
+
+dt_clean$interval <- sprintf("%04d", dt_clean$interval)     # Convert Interval into HHMM format
+
+dt_activity <- dt_clean[complete.cases(dt_clean), ]         # Handle only complete cases
+
+```
 
 ## What is mean total number of steps taken per day?
+```{r}
 
+# Aggregating the steps taken for each day
+dt_daily_summary <- dt_activity %>% group_by(date) %>% summarise(daily_total_steps = sum(steps), 
+                                             daily_average_steps = mean(steps))
 
+```
+```{r echo=FALSE, warning=FALSE, showtable, results="asis"}
+## Do a nice print out into a table format
+xt <- xtable(dt_daily_summary, caption="Daily Summary")
+print(xt, type="html")
+
+```
+
+### Plotting the daily total along the dates
+```{r}
+
+barplot(dt_daily_summary$daily_total_steps, names=dt_daily_summary$date, 
+        xlab="Dates", ylab="Total Steps", main="Daily Summary")
+
+```
+
+### The overall average number of steps taken over the period
+```{r}
+
+mean(dt_daily_summary$daily_total_steps)
+
+```
+
+### The overall median of steps taken over the same period
+```{r}
+
+median(dt_daily_summary$daily_total_steps)
+
+```
 
 ## What is the average daily activity pattern?
+```{r}
 
+# Aggregating the steps taken for each interval to see daily activity patterns
+dt_daily_activity <- dt_activity %>% group_by(Interval) %>% 
+    summarise(interval_total_steps = sum(steps), 
+              interval_average_steps = mean(steps))
 
+# Plotting the Average Number of Steps Taken by each Interval
+plot(dt_daily_activity$Interval, dt_daily_activity$interval_average_steps,
+     type="l", xlab="Interval", ylab="Average Steps Taken", 
+     main="Average Daily Activity Pattern")
+
+```
 
 ## Imputing missing values
 
+```{r}
 
+# The total number of rows with missing steps information
+nrow(dt_clean[is.na(dt_clean$steps), ])
 
+# Copy dt_clean into a new data.frame for data input
+df_clean <- as.data.frame(dt_clean)
+
+# Strategy: Replace all NA values with the mean steps for the same interval
+# 
+# Method:
+# Extract subset of NA steps from df_clean, match it's Interval to that of
+# dt_daily_activity (created above) and retrieve it's average steps
+df_clean[is.na(df_clean$steps),]$steps <-
+    dt_daily_activity[match(df_clean[is.na(df_clean$steps),]$Interval,
+                            dt_daily_activity$Interval), ]$interval_average_steps
+
+# Aggregating the steps taken for each day
+df_new_daily_summary <- df_clean %>% group_by(date) %>% 
+    summarise(daily_total_steps = sum(steps),
+              daily_average_steps = mean(steps))
+
+# Set proper names for each column
+barplot(df_new_daily_summary$daily_total_steps, names=df_new_daily_summary$date, 
+        xlab="Dates", ylab="Total Steps", main="Daily Summary with Adjustments")
+
+mean(df_new_daily_summary$daily_total_steps)
+
+median(df_new_daily_summary$daily_total_steps)
+
+```
 ## Are there differences in activity patterns between weekdays and weekends?
+
+``` {r}
+
+# Create a new column "dayofweek" with the day of week using the weekdays() function
+df_clean$dayofweek <- weekdays(ymd(df_clean$date))
+
+# Create a new column "wday"" as a factor of weekend or weekday based on the 
+# dayofweek.  I could use the column created earlier but the following uses
+# the data source itself.
+df_clean$wday <- as.factor(ifelse(weekdays(ymd(df_clean$date)) %in% 
+                                      c("Saturday", "Sunday"), 
+                                  "Weekend", "Weekday"))
+
+# Using dplyr to obtain the group averages between weekends and weekdays and place the
+# set into a new variable df_daily_activity
+
+df_daily_activity <- df_clean %>% group_by(wday, Interval) %>% 
+    summarise(interval_total_steps = sum(steps), 
+              interval_average_steps = mean(steps))
+
+# Using Lattice graphics to perform the plot
+time_series = seq(df_daily_activity$Interval[25], df_daily_activity$Interval[288], by = "5 hours")
+
+xyplot(interval_average_steps ~ Interval | wday, 
+       data=df_daily_activity, type="l", layout=c(1,2), xlab="Intervals", 
+       ylab="Average Steps Taken",
+       main="Average Daily Pattern",
+       scales = list(x=list(at=time_series, 
+                            labels=format(time_series, "%H:%M")))
+)
+
+```
+
+Another way of looking at the comparisons between the daily activities is to use an overlaid plot.
+
+```{r}
+
+# Plotting the Average Number of Steps Taken by each Interval for weekdays
+plot(df_daily_activity[df_daily_activity$wday == "Weekday", ]$Interval, 
+     df_daily_activity[df_daily_activity$wday == "Weekday", ]$interval_average_steps,
+     type="l", xlab="Interval", ylab="Average Steps Taken", 
+     main="Average Daily Activity Pattern", col="red")
+
+weekday_mean <- 
+    mean(df_daily_activity[df_daily_activity$wday == "Weekday", ]$interval_average_steps)
+
+abline(h=weekday_mean, col="red")
+
+# Adding the Average Number of Steps Taken by each Interval for weekends
+lines(df_daily_activity[df_daily_activity$wday == "Weekend", ]$Interval, 
+     df_daily_activity[df_daily_activity$wday == "Weekend", ]$interval_average_steps,
+     type="l", xlab="Interval", ylab="Average Steps Taken", 
+     main="Average Daily Activity Pattern", col="blue")
+
+weekend_mean <- 
+    mean(df_daily_activity[df_daily_activity$wday == "Weekend", ]$interval_average_steps)
+
+abline(h=weekend_mean, col="blue")
+
+legend("topright", c("Weekday", "Weekend"), 
+       col=c("red", "blue"), lwd=2, cex=0.8)
+
+```
+  
+### Observations
+1.  There are low activities in earlier interval periods for both Weekdays and Weekends until around 6 am.  
+2.  Activities pick up after that but different for Weekdays and Weekends, where there is higher level of steps taken for Weekdays until before noon.  
+3.  Activities generally lowers just after 11am and before 12 noon but tend to stay higher for Weekends than Weekdays for the rest of the day.  
+4.  In comparison, the average level of activities (based on steps taken) is higher on Weekend than on Weekdays - as seen by the two horizontal lines.
+5.  For both Weekdays and Weekends, activities are reduced significantly after 10pm.  

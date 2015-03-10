@@ -35,8 +35,10 @@ dt_activity <- dt_clean[complete.cases(dt_clean), ]         # Handle only comple
 ```{r}
 
 # Aggregating the steps taken for each day
-dt_daily_summary <- dt_activity %>% group_by(date) %>% summarise(daily_total_steps = sum(steps), 
-                                             daily_average_steps = mean(steps))
+dt_daily_summary <- dt_activity %>% group_by(date) %>% 
+    summarise(daily_total_steps = sum(steps), 
+              daily_average_steps = mean(steps),
+              daily_median_steps = median(steps))
 
 ```
 ```{r echo=FALSE, warning=FALSE, showtable, results="asis"}
@@ -45,6 +47,8 @@ xt <- xtable(dt_daily_summary, caption="Daily Summary")
 print(xt, type="html")
 
 ```
+The median for every day is zero because of the number of zero steps recorded for each day.  
+
 
 ### Plotting the daily total along the dates
 ```{r}

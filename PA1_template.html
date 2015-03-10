@@ -110,10 +110,12 @@ dt_activity &lt;- dt_clean[complete.cases(dt_clean), ]         # Handle only com
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
 <pre class="r"><code># Aggregating the steps taken for each day
-dt_daily_summary &lt;- dt_activity %&gt;% group_by(date) %&gt;% summarise(daily_total_steps = sum(steps), 
-                                             daily_average_steps = mean(steps))</code></pre>
+dt_daily_summary &lt;- dt_activity %&gt;% group_by(date) %&gt;% 
+    summarise(daily_total_steps = sum(steps), 
+              daily_average_steps = mean(steps),
+              daily_median_steps = median(steps))</code></pre>
 <!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
-<!-- Tue Mar 10 19:05:16 2015 -->
+<!-- Tue Mar 10 19:24:55 2015 -->
 <table border="1">
 <caption align="bottom">
 Daily Summary
@@ -130,6 +132,9 @@ daily_total_steps
 <th>
 daily_average_steps
 </th>
+<th>
+daily_median_steps
+</th>
 </tr>
 <tr>
 <td align="right">
@@ -143,6 +148,9 @@ daily_average_steps
 </td>
 <td align="right">
 0.44
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -158,6 +166,9 @@ daily_average_steps
 <td align="right">
 39.42
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -171,6 +182,9 @@ daily_average_steps
 </td>
 <td align="right">
 42.07
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -186,6 +200,9 @@ daily_average_steps
 <td align="right">
 46.16
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -199,6 +216,9 @@ daily_average_steps
 </td>
 <td align="right">
 53.54
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -214,6 +234,9 @@ daily_average_steps
 <td align="right">
 38.25
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -227,6 +250,9 @@ daily_average_steps
 </td>
 <td align="right">
 44.48
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -242,6 +268,9 @@ daily_average_steps
 <td align="right">
 34.38
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -255,6 +284,9 @@ daily_average_steps
 </td>
 <td align="right">
 35.78
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -270,6 +302,9 @@ daily_average_steps
 <td align="right">
 60.35
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -283,6 +318,9 @@ daily_average_steps
 </td>
 <td align="right">
 43.15
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -298,6 +336,9 @@ daily_average_steps
 <td align="right">
 52.42
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -311,6 +352,9 @@ daily_average_steps
 </td>
 <td align="right">
 35.20
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -326,6 +370,9 @@ daily_average_steps
 <td align="right">
 52.38
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -339,6 +386,9 @@ daily_average_steps
 </td>
 <td align="right">
 46.71
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -354,6 +404,9 @@ daily_average_steps
 <td align="right">
 34.92
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -367,6 +420,9 @@ daily_average_steps
 </td>
 <td align="right">
 41.07
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -382,6 +438,9 @@ daily_average_steps
 <td align="right">
 36.09
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -395,6 +454,9 @@ daily_average_steps
 </td>
 <td align="right">
 30.63
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -410,6 +472,9 @@ daily_average_steps
 <td align="right">
 46.74
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -423,6 +488,9 @@ daily_average_steps
 </td>
 <td align="right">
 30.97
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -438,6 +506,9 @@ daily_average_steps
 <td align="right">
 29.01
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -451,6 +522,9 @@ daily_average_steps
 </td>
 <td align="right">
 8.65
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -466,6 +540,9 @@ daily_average_steps
 <td align="right">
 23.53
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -479,6 +556,9 @@ daily_average_steps
 </td>
 <td align="right">
 35.14
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -494,6 +574,9 @@ daily_average_steps
 <td align="right">
 39.78
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -507,6 +590,9 @@ daily_average_steps
 </td>
 <td align="right">
 17.42
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -522,6 +608,9 @@ daily_average_steps
 <td align="right">
 34.09
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -535,6 +624,9 @@ daily_average_steps
 </td>
 <td align="right">
 53.52
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -550,6 +642,9 @@ daily_average_steps
 <td align="right">
 36.81
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -563,6 +658,9 @@ daily_average_steps
 </td>
 <td align="right">
 36.70
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -578,6 +676,9 @@ daily_average_steps
 <td align="right">
 36.25
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -591,6 +692,9 @@ daily_average_steps
 </td>
 <td align="right">
 28.94
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -606,6 +710,9 @@ daily_average_steps
 <td align="right">
 44.73
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -619,6 +726,9 @@ daily_average_steps
 </td>
 <td align="right">
 11.18
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -634,6 +744,9 @@ daily_average_steps
 <td align="right">
 43.78
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -647,6 +760,9 @@ daily_average_steps
 </td>
 <td align="right">
 37.38
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -662,6 +778,9 @@ daily_average_steps
 <td align="right">
 25.47
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -675,6 +794,9 @@ daily_average_steps
 </td>
 <td align="right">
 0.14
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -690,6 +812,9 @@ daily_average_steps
 <td align="right">
 18.89
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -703,6 +828,9 @@ daily_average_steps
 </td>
 <td align="right">
 49.79
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -718,6 +846,9 @@ daily_average_steps
 <td align="right">
 52.47
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -731,6 +862,9 @@ daily_average_steps
 </td>
 <td align="right">
 30.70
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -746,6 +880,9 @@ daily_average_steps
 <td align="right">
 15.53
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -759,6 +896,9 @@ daily_average_steps
 </td>
 <td align="right">
 44.40
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -774,6 +914,9 @@ daily_average_steps
 <td align="right">
 70.93
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -787,6 +930,9 @@ daily_average_steps
 </td>
 <td align="right">
 73.59
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -802,6 +948,9 @@ daily_average_steps
 <td align="right">
 50.27
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -815,6 +964,9 @@ daily_average_steps
 </td>
 <td align="right">
 41.09
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -830,6 +982,9 @@ daily_average_steps
 <td align="right">
 38.76
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -843,6 +998,9 @@ daily_average_steps
 </td>
 <td align="right">
 47.38
+</td>
+<td align="right">
+0.00
 </td>
 </tr>
 <tr>
@@ -858,6 +1016,9 @@ daily_average_steps
 <td align="right">
 35.36
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 <tr>
 <td align="right">
@@ -872,8 +1033,12 @@ daily_average_steps
 <td align="right">
 24.47
 </td>
+<td align="right">
+0.00
+</td>
 </tr>
 </table>
+<p>The median for every day is zero because of the number of zero steps recorded for each day.</p>
 <div id="plotting-the-daily-total-along-the-dates" class="section level3">
 <h3>Plotting the daily total along the dates</h3>
 <pre class="r"><code>barplot(dt_daily_summary$daily_total_steps, names=dt_daily_summary$date, 

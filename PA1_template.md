@@ -68,7 +68,7 @@ dt_daily_summary <- dt_activity %>% group_by(date) %>%
               daily_median_steps = median(steps))
 ```
 <!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
-<!-- Tue Mar 10 19:24:55 2015 -->
+<!-- Tue Mar 10 20:51:47 2015 -->
 <table border=1>
 <caption align="bottom"> Daily Summary </caption>
 <tr> <th>  </th> <th> date </th> <th> daily_total_steps </th> <th> daily_average_steps </th> <th> daily_median_steps </th>  </tr>
@@ -166,13 +166,31 @@ dt_daily_activity <- dt_activity %>% group_by(Interval) %>%
     summarise(interval_total_steps = sum(steps), 
               interval_average_steps = mean(steps))
 
+max_interval <- 
+    dt_daily_activity[dt_daily_activity$interval_total_steps == 
+                             max(dt_daily_activity$interval_total_steps), ]$Interval
+```
+
+The daily average daily activity pattern across the time intervals can be seen 
+in the following plot of the average number of steps taken per interval.  
+
+
+```r
 # Plotting the Average Number of Steps Taken by each Interval
 plot(dt_daily_activity$Interval, dt_daily_activity$interval_average_steps,
      type="l", xlab="Interval", ylab="Average Steps Taken", 
      main="Average Daily Activity Pattern")
+
+rect(xleft=max_interval - hm("00:10"), xright=max_interval + hm("00:10"), ybottom=0, ytop=max(dt_daily_activity$interval_average_steps), col="red", density=0.8)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+The interval with the maximum number of steps is highlighted in the red box at interval  
+
+```
+## [1] "08:35"
+```
 
 ## Imputing missing values
 
@@ -202,14 +220,15 @@ df_clean[is.na(df_clean$steps),]$steps <-
 # Aggregating the steps taken for each day
 df_new_daily_summary <- df_clean %>% group_by(date) %>% 
     summarise(daily_total_steps = sum(steps),
-              daily_average_steps = mean(steps))
+              daily_average_steps = mean(steps),
+              daily_median_steps = median(steps))
 
 # Set proper names for each column
 barplot(df_new_daily_summary$daily_total_steps, names=df_new_daily_summary$date, 
         xlab="Dates", ylab="Total Steps", main="Daily Summary with Adjustments")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 ```r
 mean(df_new_daily_summary$daily_total_steps)
@@ -226,6 +245,11 @@ median(df_new_daily_summary$daily_total_steps)
 ```
 ## [1] 10766.19
 ```
+In comparison with the mean and median of the total number of steps taken for complete cases, there is no significan differences between the adjusted data and the complete cases data.  There is only a very slight shift of the median towards the mean for the adjusted data.  
+
+As such, there is no impact due to adjustment using a matching interval strategy to provide for the missing steps values.  
+
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
@@ -259,7 +283,7 @@ xyplot(interval_average_steps ~ Interval | wday,
 )
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
 Another way of looking at the comparisons between the daily activities is to use an overlaid plot.
 
@@ -291,7 +315,7 @@ legend("topright", c("Weekday", "Weekend"),
        col=c("red", "blue"), lwd=2, cex=0.8)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
   
 ### Observations
 1.  There are low activities in earlier interval periods for both Weekdays and Weekends until around 6 am.  

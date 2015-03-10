@@ -66,7 +66,7 @@ dt_daily_summary <- dt_activity %>% group_by(date) %>% summarise(daily_total_ste
                                              daily_average_steps = mean(steps))
 ```
 <!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
-<!-- Tue Mar 10 15:41:29 2015 -->
+<!-- Tue Mar 10 19:05:16 2015 -->
 <table border=1>
 <caption align="bottom"> Daily Summary </caption>
 <tr> <th>  </th> <th> date </th> <th> daily_total_steps </th> <th> daily_average_steps </th>  </tr>
